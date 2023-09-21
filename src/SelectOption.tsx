@@ -1,5 +1,5 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
-import { formType } from "./DynamicForm";
+import { formType } from "./formInterface";
 import { FC } from "react";
 
 interface SelectProps {
@@ -18,7 +18,7 @@ export const SelectOption: FC<SelectProps> = ({
         label='Account Type'
         value={selectedValue}
         onChange={(e) => {
-          onSelectChange(e.target.value as any); // Pass the selected value to the parent
+          onSelectChange(e.target.value as formType);
         }}
       >
         <MenuItem value={formType.ADVANCED}>{formType.ADVANCED}</MenuItem>

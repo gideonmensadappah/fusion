@@ -5,11 +5,9 @@ import { useForm } from "react-hook-form"; // Import React Hook Form for form ha
 import Button from "@mui/material/Button";
 import { CheckboxControl } from "./CheckboxControl";
 import { SelectOption } from "./SelectOption";
+import { formType } from "./formInterface";
+import { errObj, initialUser, regexMap } from "./consts";
 
-export enum formType {
-  MANUAL = "Manual",
-  ADVANCED = "Advanced",
-}
 const DynamicForm = () => {
   const { handleSubmit, register, formState, reset, clearErrors, setError } =
     useForm();
@@ -24,13 +22,7 @@ const DynamicForm = () => {
     setUseSSL(checked);
   };
   const resetForm = () => {
-    reset({
-      username: "",
-      password: "",
-      serverPath: "",
-      serverAddress: "",
-      port: "",
-    });
+    reset(initialUser);
     setUseSSL(false);
     setSelectedValue(formType.MANUAL);
     clearErrors("");
@@ -41,8 +33,6 @@ const DynamicForm = () => {
     const isPasswordFilled = formState.dirtyFields.password;
     const isServerPathFilled = formState.dirtyFields.serverPath;
     const isserverAddressFilled = formState.dirtyFields.serverAddress;
-
-    const errObj = { message: "error!" };
 
     if (!isUsernameFilled) {
       setError("username", errObj);
@@ -67,9 +57,7 @@ const DynamicForm = () => {
       console.log("Form has validation errors:", formState.errors);
     }
 
-    // If there are no validation errors, continue with your logic
-
-    // Pass the form data to the submitForm function from useDynamicForm
+    // Pass the form data to submitForm function from useDynamicForm
     await submitForm({ ...data, formType: selectedValue, useSSL });
     console.log({ ...data, formType: selectedValue });
     resetForm();
@@ -96,7 +84,7 @@ const DynamicForm = () => {
               placeholder='name@example.com'
               {...register("username", {
                 pattern: {
-                  value: /\S+@\S+\.\S+/,
+                  value: regexMap.username,
                   message: "Invalid email format",
                 },
               })}
@@ -112,7 +100,7 @@ const DynamicForm = () => {
               }
               {...register("password", {
                 pattern: {
-                  value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{8,}$/,
+                  value: regexMap.passowrd,
                   message: "Invalid password format",
                 },
               })}
@@ -128,7 +116,7 @@ const DynamicForm = () => {
               }
               {...register("serverAddress", {
                 pattern: {
-                  value: /^(?!-)[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*$/,
+                  value: regexMap.serverAddress,
                   message: "Invalid serverAddress format",
                 },
               })}
@@ -147,7 +135,7 @@ const DynamicForm = () => {
                   }
                   {...register("serverPath", {
                     pattern: {
-                      value: /^[a-zA-Z0-9\/]+$/,
+                      value: regexMap.serverPath,
                       message: "Invalid serverPath format",
                     },
                   })}
@@ -161,8 +149,7 @@ const DynamicForm = () => {
                   required
                   {...register("port", {
                     pattern: {
-                      value:
-                        /^(1\d{4}|[1-9]\d{0,3}|[1-5]\d{4}|6[0-5]\d{3}|6553[0-5]|65535)$/,
+                      value: regexMap.port,
                       message: "Invalid port number",
                     },
                   })}
